@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.UserMapper">
+    <resultMap id="resultMap" type="com.pojo.User">
+        <id column="id" property="id"></id>
+        <result column="username" property="username"></result>
+        <result column="password" property="password"></result>
+        <result column="sex" property="sex"></result>
+    </resultMap>
+
+    <sql id="select_sql_part">
+        select * from user
+    </sql>
+
+    <select id="findUserALL" resultMap="resultMap">
+        <include refid="select_sql_part"></include>
+    </select>
+
+    <select id="findUserById" parameterType="Integer" resultMap="resultMap">
+        <include refid="select_sql_part"></include>
+         where id = #{v}
+    </select>
+
+    <select id="findUserByCondition" parameterType="user" resultMap="resultMap">
+        <include refid="select_sql_part"></include>
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="username != null and username != ''">
+                and username like concat('%', #{username}, '%')
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+            <if test="sex != null and sex != ''">
+                and sex = #{sex}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateUserById" parameterType="user" useGeneratedKeys="true" keyProperty="id">
+        update user
+        <set>
+            <if test="username != null and username !=''">
+                , username = #{username}
+            </if>
+            <if test="password != null and password != ''">
+                , password = #{password}
+            </if>
+            <if test="sex != null and sex != ''">
+                , sex = #{sex}
+            </if>
+        </set>
+         where id = #{id}
+    </update>
+
+    <select id="selectByArray" resultMap="resultMap">
+        select * from user where id
+        <foreach collection="array" open="in (" item="innerId" close=")" separator=",">
+            #{innerId}
+        </foreach>
+    </select>
+
+    <select id="selectByList" resultMap="resultMap">
+        select * from user where id
+        <foreach collection="list" open="in (" item="innerId" close=")" separator=",">
+            #{innerId}
+        </foreach>
+    </select>
+
+    <update id="updateUserPasswordById">
+        update user set password = #{password} where id = #{userId}
+    </update>
+
+</mapper>

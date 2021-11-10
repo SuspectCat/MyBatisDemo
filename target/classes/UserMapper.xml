@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserMapper">
+    <!-- 注意 resultType 的格式 -->
+    <select id="selectUser" resultType="user">
+        /* 后面不要有分号 */
+        select * from user
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(*) from user
+    </select>
+
+    <select id="selectUserById" parameterType="Integer" resultType="user">
+        select * from  user where id = #{value}
+    </select>
+
+    <insert id="insertUser" parameterType="user">
+        insert into user value (#{id}, #{username}, #{password}, #{sex})
+    </insert>
+
+    <update id="modifyUserNameById" parameterType="user">
+        update user set username = #{username} where id = #{id};
+    </update>
+
+    <delete id="deleteUser" parameterType="int">
+        delete from user where id = #{v}
+    </delete>
+
+    <!-- 模糊查询 -->
+    <!--/*select * from user where username like "%"#{v}"%"*/-->
+    <select id="selectByLimit" parameterType="String" resultType="user">
+        select * from user where username like concat('%', #{v}, '%')
+    </select>
+
+    <!--<select id="selectPage" parameterType="" resultType="user">
+    </select>-->
+
+    <insert id="insertUserDemo" parameterType="user" useGeneratedKeys="true" keyProperty="id">
+        insert into user(username, password, sex) value (#{username}, #{password}, #{sex})
+    </insert>
+
+</mapper>

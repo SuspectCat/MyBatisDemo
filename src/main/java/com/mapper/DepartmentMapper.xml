@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.DepartmentMapper">
+    <resultMap id="DepartmentMapper" type="com.pojo.Department">
+        <id column="department_id" property="departmentId"></id>
+        <result column="department_name" property="departmentName"></result>
+        <result column="department_description" property="departmentDescription"></result>
+
+        <collection property="employees" ofType="com.pojo.Employee">
+            <id column="employee_id" property="employeeId"></id>
+            <result column="employee_name" property="employeeName"></result>
+            <result column="employee_telephone" property="employeeTelephone"></result>
+            <result column="employee_department" property="employeeDepartment"></result>
+        </collection>
+    </resultMap>
+
+    <select id="findByDepartmentId" resultMap="DepartmentMapper">
+        select department.*, employee.* from employee_department.department left join employee_department.employee on department.department_id = employee.employee_department where department_id = #{v}
+    </select>
+</mapper>
